@@ -1,0 +1,163 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
+public class User extends JFrame {
+    private JTextField usernameField;
+    private JPasswordField passwordField;
+    private JTextField nameField;
+    private JTextField surnameField;
+    private JTextField ageField;
+    private JTextField emailField;
+    private JPasswordField signupPasswordField; // Added for the sign-up password field
+
+    private JPanel cardPanel;
+    private CardLayout cardLayout;
+
+    public User() {
+        setTitle("Blackjack Game");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(400, 400);
+
+        cardPanel = new JPanel();
+        cardLayout = new CardLayout();
+        cardPanel.setLayout(cardLayout);
+
+        JPanel loginPanel = createLoginPanel();
+        JPanel signupPanel = createSignupPanel();
+
+        cardPanel.add(loginPanel, "Login");
+        cardPanel.add(signupPanel, "Signup");
+
+        add(cardPanel);
+
+        setVisible(true);
+    }
+
+    private JPanel createLoginPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 2));
+
+        JLabel usernameLabel = new JLabel("Username:");
+        usernameField = new JTextField();
+        JLabel passwordLabel = new JLabel("Password:");
+        passwordField = new JPasswordField();
+        JButton loginButton = new JButton("Login");
+        JButton switchToSignupButton = new JButton("Signup");
+
+        // Login button action listener
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String enteredUsername = usernameField.getText();
+                char[] enteredPassword = passwordField.getPassword();
+
+                // Perform authentication logic here (for demonstration, using hardcoded values)
+                String validUsername = "tshepho";
+                String validPassword = "20010327";
+
+                if (enteredUsername.equals(validUsername) && new String(enteredPassword).equals(validPassword)) {
+                    JOptionPane.showMessageDialog(null, "Login successful!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Login failed. Invalid credentials.");
+                }
+            }
+        });
+
+        // Switch to signup button action listener
+        switchToSignupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "Signup");
+            }
+        });
+
+        panel.add(usernameLabel);
+        panel.add(usernameField);
+        panel.add(passwordLabel);
+        panel.add(passwordField);
+        panel.add(loginButton);
+        panel.add(switchToSignupButton);
+
+        return panel;
+    }
+
+    private JPanel createSignupPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(9, 2)); // Adjusted the layout to accommodate the password field
+
+        JLabel nameLabel = new JLabel("Name:");
+        nameField = new JTextField();
+        JLabel surnameLabel = new JLabel("Surname:");
+        surnameField = new JTextField();
+        JLabel ageLabel = new JLabel("Age:");
+        ageField = new JTextField();
+        JLabel emailLabel = new JLabel("Email:");
+        emailField = new JTextField();
+        JLabel passwordLabel = new JLabel("Password:"); // Changed the label to "Password"
+        signupPasswordField = new JPasswordField(); // Changed the field to JPasswordField
+        JButton signupButton = new JButton("Signup");
+        JButton switchToLoginButton = new JButton("Switch to Login");
+
+        // Signup button action listener
+        signupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String enteredName = nameField.getText();
+                String enteredSurname = surnameField.getText();
+                String enteredAge = ageField.getText();
+                String enteredEmail = emailField.getText();
+                char[] enteredPassword = signupPasswordField.getPassword(); // Retrieve the password as a char array
+
+                // Perform signup logic here
+                // You can store the user data in a file or database.
+                saveUserDataToFile(enteredName, enteredSurname, enteredAge, enteredEmail, new String(enteredPassword));
+
+                JOptionPane.showMessageDialog(null, "Signup successful!");
+            }
+        });
+
+
+        // Switch to login button action listener
+        switchToLoginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(cardPanel, "Login");
+            }
+        });
+
+        panel.add(nameLabel);
+        panel.add(nameField);
+        panel.add(surnameLabel);
+        panel.add(surnameField);
+        panel.add(ageLabel);
+        panel.add(ageField);
+        panel.add(emailLabel);
+        panel.add(emailField);
+        panel.add(passwordLabel); // Added password label
+        panel.add(signupPasswordField); // Added the password field for signup
+        panel.add(signupButton);
+        panel.add(switchToLoginButton);
+
+        return panel;
+    }
+
+    private void saveUserDataToFile(String name, String surname, String age, String email, String password) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("the folder to the users data", true))) {
+            writer.write("Name: " + name + "\n");
+            writer.write("Surname: " + surname + "\n");
+            writer.write("Age: " + age + "\n");
+            writer.write("Email: " + email + "\n");
+            writer.write("Password: " + password + "\n"); // Write the password to the file
+            writer.write("----------------------------\n");
+        } catch (IOException ex) {
+            System.err.println("Error writing to file: " + ex.getMessage());
+        }
+    }
+
+
+}
