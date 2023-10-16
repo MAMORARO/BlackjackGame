@@ -22,6 +22,11 @@
             if(currentState == STATE.MENU) {
                 openMenu(); //we open the menu by a static method.
             }
+           SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    new User();
+                }
+            });
         }
 
         public static void openMenu() { //this method literally opens the menu.
